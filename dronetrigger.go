@@ -22,6 +22,7 @@ func main() {
 	ref := flag.String("ref", "", "Git rev (i.e. branch) to trigger build.")
 	repo := flag.String("repo", "", "Repository to build (i.e. octocat/awesome).")
 	configFile := flag.String("config", "/etc/dronetrigger.yml", "Configuration file.")
+	verbose := flag.Bool("v", false, "Verbose output.")
 	flag.Parse()
 
 	if *repo == "" {
@@ -50,5 +51,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Printf("started build sha %s for %s", build.After, *repo)
+	if *verbose {
+		log.Printf("started build sha %s for %s", build.After, *repo)
+	}
 }
