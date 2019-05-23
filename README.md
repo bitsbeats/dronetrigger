@@ -4,7 +4,7 @@ Simple tool to trigger drone builds. Can be used for more advanced crons or in s
 
 ## Configuration
 
-The configfile is either in the working directory as `dronetrigger.yml` or supplied by `-config`.
+The configfile is either `/etc/dronetrigger.yml` or supplied by `-config`.
 
 Sample:
 
@@ -30,10 +30,10 @@ dronetrigger -repo octocat/test -ref refs/heads/master
 Help:
 
 ```sh
-$ ./dronetrigger -h
+$ dronetrigger -h
 Usage of ./dronetrigger:
   -config string
-    	Configuration file, defaults to dronetrigger.yml in workdir. (default "dronetrigger.yml")
+    	Configuration file. (default "/etc/dronetrigger.yml")
   -ref string
     	Git rev (i.e. branch) to trigger build.
   -repo string

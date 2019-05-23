@@ -20,7 +20,7 @@ type (
 func main() {
 	ref := flag.String("ref", "", "Git rev (i.e. branch) to trigger build.")
 	repo := flag.String("repo", "", "Repository to build (i.e. octocat/awesome).")
-	configFile := flag.String("config", "dronetrigger.yml", "Configuration file, defaults to dronetrigger.yml in workdir.")
+	configFile := flag.String("config", "/etc/dronetrigger.yml", "Configuration file.")
 	flag.Parse()
 
 	if *repo == "" {
