@@ -10,7 +10,7 @@ steps:
     commands:
       - apk --no-cache add git
       - go mod tidy
-      - go build .
+      - go build -o dronetrigger-linux-amd64 .
 
   - name: release
     image: plugins/github-release
@@ -18,7 +18,7 @@ steps:
       api_key:
         from_secret: github_token
       files:
-        - dronetrigger
+        - dronetrigger-linux-amd64
       checksum:
         - md5
         - sha1

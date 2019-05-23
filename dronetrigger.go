@@ -28,7 +28,6 @@ func main() {
 		log.Print("dronetrigger\n\n")
 		flag.PrintDefaults()
 		log.Fatal("\nplease specify a repository.")
-
 	}
 
 	configData, err := ioutil.ReadFile(*configFile)
