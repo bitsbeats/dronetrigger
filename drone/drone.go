@@ -15,14 +15,8 @@ type (
 		token  string
 		client *http.Client
 	}
-	Build struct {
-		Message string
-		Number  int64
-		Before  string
-		After   string
-	}
-	message struct {
-		message string
+	message interface {
+		GetMessage() string
 	}
 )
 
@@ -72,11 +66,11 @@ func (d *Drone) request(method string, url string, body io.Reader, result interf
 	err = json.NewDecoder(resp.Body).Decode(&result)
 	if resp.StatusCode >= 300 {
 		m, ok := (result).(message)
-		message := m.message
+		msg := fmt.Sprintf("%d %s", resp.StatusCode, m.GetMessage())
 		if !ok {
-			message = resp.Status
+			msg = resp.Status
 		}
-		err = errors.New(message)
+		err = errors.New(msg)
 		return
 	}
 	return
