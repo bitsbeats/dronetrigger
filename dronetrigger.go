@@ -18,16 +18,19 @@ type (
 )
 
 func main() {
+	log.SetFlags(0)
 	ref := flag.String("ref", "", "Git rev (i.e. branch) to trigger build.")
 	repo := flag.String("repo", "", "Repository to build (i.e. octocat/awesome).")
 	configFile := flag.String("config", "/etc/dronetrigger.yml", "Configuration file.")
 	flag.Parse()
 
 	if *repo == "" {
-		log.Fatal("please specify a repository (see -h)")
+		log.Print("dronetrigger\n\n")
+		flag.PrintDefaults()
+		log.Fatal("\nplease specify a repository.")
+
 	}
 
-	log.SetFlags(0)
 	configData, err := ioutil.ReadFile(*configFile)
 	if err != nil {
 		log.Fatal(err)
