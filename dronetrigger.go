@@ -4,9 +4,9 @@ import (
 	"flag"
 	"io/ioutil"
 	"log"
+	"os"
 
 	"github.com/bitsbeats/dronetrigger/drone"
-
 	"gopkg.in/yaml.v2"
 )
 
@@ -19,6 +19,7 @@ type (
 
 func main() {
 	log.SetFlags(0)
+	log.SetOutput(os.Stdout)
 	ref := flag.String("ref", "", "Git rev (i.e. branch) to trigger build.")
 	repo := flag.String("repo", "", "Repository to build (i.e. octocat/awesome).")
 	configFile := flag.String("config", "/etc/dronetrigger.yml", "Configuration file.")
