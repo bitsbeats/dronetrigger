@@ -48,7 +48,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("unable to get last build: %v", err)
 	}
-	build, err := d.Trigger(*repo, lastBuild.After)
+	build, err := d.Trigger(*repo, lastBuild.After, lastBuild.Source)
 	if err != nil {
 		log.Fatal(err)
 	}

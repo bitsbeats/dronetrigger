@@ -5,8 +5,9 @@ type Build struct {
 	Number  int64
 	Before  string
 	After   string
+	Source  string // name of the branch
 }
 
 func (b *Build) GetMessage() string {
-    return b.Message
+	return b.Message
 }

@@ -43,9 +43,9 @@ func (d *Drone) LastBuild(repo string, ref string) (b Build, err error) {
 	return
 }
 
-func (d *Drone) Trigger(repo string, sha string) (b Build, err error) {
+func (d *Drone) Trigger(repo string, branch string, sha string) (b Build, err error) {
 	url := fmt.Sprintf("%s/api/repos/%s/builds?DRONETRIGGER=true", d.url, repo)
-	body := strings.NewReader(fmt.Sprintf("commit=%s", sha))
+	body := strings.NewReader(fmt.Sprintf("commit=%s&branch=%s", sha, branch))
 	err = d.request("POST", url, body, &b)
 	return
 }
