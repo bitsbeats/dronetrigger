@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"strings"
 )
 
 type (
@@ -43,10 +42,9 @@ func (d *Drone) LastBuild(repo string, ref string) (b Build, err error) {
 	return
 }
 
-func (d *Drone) Trigger(repo string, branch string, sha string) (b Build, err error) {
-	url := fmt.Sprintf("%s/api/repos/%s/builds?DRONETRIGGER=true", d.url, repo)
-	body := strings.NewReader(fmt.Sprintf("commit=%s&branch=%s", sha, branch))
-	err = d.request("POST", url, body, &b)
+func (d *Drone) Trigger(repo string, buildId int64) (b Build, err error) {
+	url := fmt.Sprintf("%s/api/repos/%s/builds/%d", d.url, repo, buildId)
+	err = d.request("POST", url, nil, &b)
 	return
 }
 
