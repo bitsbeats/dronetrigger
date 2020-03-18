@@ -2,6 +2,9 @@
 
 Simple tool to trigger drone builds. Can be used for more advanced crons or in scripts.
 
+**Note**: dronetrigger injects the variable `DRONETRIGGER=true` into the steps.
+Use this to determine if a build was triggered.
+
 ## Configuration
 
 The configfile is either `/etc/dronetrigger.yml` or supplied by `-config`.
