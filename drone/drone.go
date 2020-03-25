@@ -64,9 +64,9 @@ func (d *Drone) request(method string, url string, body io.Reader, result interf
 	err = json.NewDecoder(resp.Body).Decode(&result)
 	if resp.StatusCode >= 300 {
 		m, ok := (result).(message)
-		msg := fmt.Sprintf("%d %s", resp.StatusCode, m.GetMessage())
-		if !ok {
-			msg = resp.Status
+		msg := resp.Status
+		if ok {
+			msg = fmt.Sprintf("%d %s", resp.StatusCode, m.GetMessage())
 		}
 		err = errors.New(msg)
 		return
