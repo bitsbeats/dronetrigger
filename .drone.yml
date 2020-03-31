@@ -10,7 +10,8 @@ steps:
     commands:
       - apk --no-cache add git
       - go mod tidy
-      - go build -o dronetrigger-linux-amd64 .
+      - go build -o dronetrigger-linux-amd64 ./cmd/dronetrigger
+      - go build -o dronetrigger-linux-amd64 ./cmd/dronetrigger-web
 
   - name: release
     image: plugins/github-release
