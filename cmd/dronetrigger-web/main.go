@@ -23,8 +23,11 @@ func main() {
 	if err != nil {
 		log.Fatalf("unable to load config: %s", err)
 	}
+	if c.Web == nil {
+		log.Fatalf("no configuration for web found")
+	}
 	if len(c.Web.BearerToken) < 8 {
-		log.Fatalf("Configured bearer token is to short")
+		log.Fatalf("configured bearer token is to short")
 	}
 
 	// setup drone

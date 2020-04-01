@@ -20,7 +20,7 @@ func LoadConfig(path string) (c *core.Config, err error) {
 		return nil, fmt.Errorf("unable to parse config: %w", err)
 	}
 
-	if c.Web.Listen == "" {
+	if c.Web != nil && (c.Web.Listen == "") {
 		c.Web.Listen = ":8080"
 	}
 	return

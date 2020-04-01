@@ -16,6 +16,9 @@ Sample:
 
 url: https://drone.example.com
 token: thisisnotavaliddronetoken1234567
+
+web:  # only required if you are using dronetrigger-web
+  bearer_token: secret_bearer_token
 ```
 
 ## Usage
