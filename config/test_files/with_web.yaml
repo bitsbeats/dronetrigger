@@ -1,0 +1,4 @@
+url: https://drone.example.com
+token: hi there
+web:
+  bearer_token: bearer_token
