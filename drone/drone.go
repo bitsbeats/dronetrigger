@@ -33,19 +33,21 @@ func New(url string, token string) *Drone {
 }
 
 // Builds lists all builds
-func (d *Drone) Builds(repo string) (builds []core.Build, err error) {
+func (d *Drone) Builds(repo string) (builds []*core.Build, err error) {
 	url := fmt.Sprintf("%s/api/repos/%s/builds", d.url, repo)
+	builds = []*core.Build{}
 	err = d.request("GET", url, nil, &builds)
 	return
 }
 
 // Builds gets the last build for a specific branc
-func (d *Drone) LastBuild(repo string, ref string) (b core.Build, err error) {
+func (d *Drone) LastBuild(repo string, ref string) (b *core.Build, err error) {
 	url := fmt.Sprintf("%s/api/repos/%s/builds/latest", d.url, repo)
 	if ref != "" {
 		url = fmt.Sprintf("%s?ref=%s", url, ref)
 	}
-	err = d.request("GET", url, nil, &b)
+	b = &core.Build{}
+	err = d.request("GET", url, nil, b)
 	return
 }
 
@@ -88,9 +90,9 @@ func (d *Drone) request(method string, url string, body io.Reader, result interf
 	}
 	err = json.NewDecoder(resp.Body).Decode(&result)
 	if resp.StatusCode >= 300 {
-		m, ok := (result).(message)
+		m, ok := result.(message)
 		msg := resp.Status
-		if ok {
+		if ok && m.GetMessage() != "" {
 			msg = fmt.Sprintf("%d %s", resp.StatusCode, m.GetMessage())
 		}
 		err = errors.New(msg)
