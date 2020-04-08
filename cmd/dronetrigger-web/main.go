@@ -26,8 +26,10 @@ func main() {
 	if c.Web == nil {
 		log.Fatalf("no configuration for web found")
 	}
-	if len(c.Web.BearerToken) < 8 {
-		log.Fatalf("configured bearer token is to short")
+	for repo, token := range c.Web.BearerToken {
+		if len(token) < 8 {
+			log.Fatalf("configured bearer token for %q is to short", repo)
+		}
 	}
 
 	// setup drone
