@@ -25,3 +25,24 @@ steps:
         - sha256
     when:
       event: tag
+
+  - name: docker staging
+    image: plugins/docker
+    settings:
+      <<: &build
+        repo: bitsbeats/dronetrigger-web
+      tags: staging
+    when:
+      event:
+        - push
+      branch:
+        - master
+
+  - name: docker release
+    image: plugins/docker
+    settings:
+      <<: *build
+      auto_tag: true
+    when:
+      event:
+        - tag
