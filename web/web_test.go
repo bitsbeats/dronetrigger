@@ -97,6 +97,16 @@ func (s *TestSuite) TestHandler(c *check.C) {
 			call: true,
 			resp: &core.JsonResponse{Status: "error", Err: "unable to restart build"},
 		},
+		{
+			bearer: "token",
+			body:   `{"repo": "octocat/repo2", "ref": "refs/heads/master"}`,
+			repo:   "octocat/repo2", ref: "refs/heads/master",
+
+			build: &core.Build{Number: 1337}, droneErr: nil,
+
+			call: false,
+			resp: &core.JsonResponse{Status: "error", Err: "invalid repository"},
+		},
 	}
 
 	for _, test := range tests {
@@ -108,7 +118,7 @@ func (s *TestSuite) TestHandler(c *check.C) {
 		}
 
 		web := NewWeb(&core.WebConfig{
-			BearerToken: "token",
+			BearerToken: map[string]string{"octocat/repo": "token"},
 			Listen:      ":1337",
 		}, d)
 
@@ -132,7 +142,7 @@ func (s *TestSuite) TestMiddleware(c *check.C) {
 
 	d := mock.NewMockDrone(mockCtrl)
 	web := NewWeb(&core.WebConfig{
-		BearerToken: "token",
+		BearerToken: map[string]string{"octocat/repo": "token"},
 		Listen:      ":1337",
 	}, d)
 

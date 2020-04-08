@@ -11,13 +11,14 @@ import (
 	"github.com/bitsbeats/dronetrigger/core"
 )
 
-// Web is a WebAPI for dronetrigger
 type (
+	// Web is a WebAPI for dronetrigger
 	Web struct {
 		Config *core.WebConfig
 		Drone  core.Drone
 	}
 
+	// Payload is the payload send to drone
 	Payload struct {
 		Repo string `json:"repo"`
 		Ref  string `json:"ref"`
@@ -35,12 +36,6 @@ func NewWeb(c *core.WebConfig, d core.Drone) *Web {
 // Handle handles an API request
 func (web *Web) Handle(w http.ResponseWriter, r *http.Request) {
 	// validate request
-	if r.Header.Get("Authorization") != fmt.Sprintf("Bearer %s", web.Config.BearerToken) {
-		w.(*ResponseWriterWithStatus).SetMessage("invalid bearer token")
-		w.WriteHeader(http.StatusForbidden)
-		Response(w, "error", fmt.Errorf("invalid bearer token"))
-		return
-	}
 	p := Payload{}
 	err := json.NewDecoder(r.Body).Decode(&p)
 	if err != nil {
@@ -55,6 +50,18 @@ func (web *Web) Handle(w http.ResponseWriter, r *http.Request) {
 		w.(*ResponseWriterWithStatus).SetMessage("no repo specified")
 		w.WriteHeader(http.StatusInternalServerError)
 		Response(w, "error", fmt.Errorf("no repo specified"))
+		return
+	}
+	if _, ok := web.Config.BearerToken[p.Repo]; !ok {
+		w.(*ResponseWriterWithStatus).SetMessage("invalid repository")
+		w.WriteHeader(http.StatusForbidden)
+		Response(w, "error", fmt.Errorf("invalid repository"))
+		return
+	}
+	if r.Header.Get("Authorization") != fmt.Sprintf("Bearer %s", web.Config.BearerToken[p.Repo]) {
+		w.(*ResponseWriterWithStatus).SetMessage("invalid bearer token")
+		w.WriteHeader(http.StatusForbidden)
+		Response(w, "error", fmt.Errorf("invalid bearer token"))
 		return
 	}
 

@@ -1,5 +1,6 @@
 url: https://drone.example.com
 token: hi there
 web:
-  bearer_token: bearer_token
+  bearer_token:
+    org/repo: bearer_token
   listen: :1337

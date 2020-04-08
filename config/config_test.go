@@ -22,7 +22,9 @@ func (s *TestSuite) TestConfig(c *check.C) {
 		Url:   "https://drone.example.com",
 		Token: "hi there",
 		Web: &core.WebConfig{
-			BearerToken: "bearer_token",
+			BearerToken: map[string]string{
+				"org/repo": "bearer_token",
+			},
 			Listen: ":8080",
 		},
 	})
@@ -33,7 +35,9 @@ func (s *TestSuite) TestConfig(c *check.C) {
 		Url:   "https://drone.example.com",
 		Token: "hi there",
 		Web: &core.WebConfig{
-			BearerToken: "bearer_token",
+			BearerToken: map[string]string{
+				"org/repo": "bearer_token",
+			},
 			Listen: ":1337",
 		},
 	})

@@ -8,7 +8,7 @@ type (
 	}
 
 	WebConfig struct {
-		BearerToken string `yaml:"bearer_token"`
-		Listen      string `yaml:"listen"`
+		BearerToken map[string]string `yaml:"bearer_token"`
+		Listen      string            `yaml:"listen"`
 	}
 )
