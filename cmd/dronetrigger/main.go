@@ -12,7 +12,7 @@ import (
 func main() {
 	log.SetFlags(0)
 	log.SetOutput(os.Stdout)
-	ref := flag.String("ref", "", "Git ref to trigger build.")
+	branch := flag.String("branch", "", "Git branch to trigger build.")
 	repo := flag.String("repo", "", "Repository to build (i.e. octocat/awesome).")
 	configFile := flag.String("config", "/etc/dronetrigger.yml", "Configuration file.")
 	verbose := flag.Bool("v", false, "Verbose output.")
@@ -30,7 +30,7 @@ func main() {
 	}
 
 	d := drone.New(c.Url, c.Token)
-	build, err := d.RebuildLastBuild(*repo, *ref)
+	build, err := d.RebuildLastBuild(*repo, *branch)
 	if err != nil {
 		log.Fatal(err)
 	}

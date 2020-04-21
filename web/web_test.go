@@ -30,7 +30,7 @@ func (s *TestSuite) TestHandler(c *check.C) {
 		bearer string
 		body   string
 		repo   string
-		ref    string
+		branch string
 
 		build    *core.Build
 		droneErr error
@@ -40,8 +40,8 @@ func (s *TestSuite) TestHandler(c *check.C) {
 	}{
 		{
 			bearer: "token",
-			body:   `{"repo": "octocat/repo", "ref": "refs/heads/dev"}`,
-			repo:   "octocat/repo", ref: "refs/heads/dev",
+			body:   `{"repo": "octocat/repo", "branch": "dev"}`,
+			repo:   "octocat/repo", branch: "dev",
 
 			build: &core.Build{Number: 1337}, droneErr: nil,
 			call: true,
@@ -49,8 +49,8 @@ func (s *TestSuite) TestHandler(c *check.C) {
 		},
 		{
 			bearer: "token",
-			body:   `{"repo": "octocat/repo", "ref": ""}`,
-			repo:   "octocat/repo", ref: "",
+			body:   `{"repo": "octocat/repo", "branch": ""}`,
+			repo:   "octocat/repo", branch: "",
 
 			build: &core.Build{Number: 1337}, droneErr: nil,
 
@@ -59,8 +59,8 @@ func (s *TestSuite) TestHandler(c *check.C) {
 		},
 		{
 			bearer: "wrong",
-			body:   `{"repo": "octocat/repo", "ref": "refs/heads/master"}`,
-			repo:   "octocat/repo", ref: "refs/heads/master",
+			body:   `{"repo": "octocat/repo", "branch": "master"}`,
+			repo:   "octocat/repo", branch: "master",
 
 			build: &core.Build{Number: 1337}, droneErr: nil,
 
@@ -70,7 +70,7 @@ func (s *TestSuite) TestHandler(c *check.C) {
 		{
 			bearer: "token",
 			body:   `no json`,
-			repo:   "octocat/repo", ref: "refs/heads/master",
+			repo:   "octocat/repo", branch: "master",
 
 			build: &core.Build{Number: 1337}, droneErr: nil,
 
@@ -79,8 +79,8 @@ func (s *TestSuite) TestHandler(c *check.C) {
 		},
 		{
 			bearer: "token",
-			body:   `{"ref": "refs/heads/master"}`,
-			repo:   "octocat/repo", ref: "refs/heads/master",
+			body:   `{"branch": "master"}`,
+			repo:   "octocat/repo", branch: "master",
 
 			build: &core.Build{Number: 1337}, droneErr: nil,
 
@@ -89,8 +89,8 @@ func (s *TestSuite) TestHandler(c *check.C) {
 		},
 		{
 			bearer: "token",
-			body:   `{"repo": "octocat/repo", "ref": "refs/heads/master"}`,
-			repo:   "octocat/repo", ref: "refs/heads/master",
+			body:   `{"repo": "octocat/repo", "branch": "master"}`,
+			repo:   "octocat/repo", branch: "master",
 
 			build: &core.Build{Number: 1337}, droneErr: fmt.Errorf("Fail"),
 
@@ -99,8 +99,8 @@ func (s *TestSuite) TestHandler(c *check.C) {
 		},
 		{
 			bearer: "token",
-			body:   `{"repo": "octocat/repo2", "ref": "refs/heads/master"}`,
-			repo:   "octocat/repo2", ref: "refs/heads/master",
+			body:   `{"repo": "octocat/repo2", "branch": "master"}`,
+			repo:   "octocat/repo2", branch: "master",
 
 			build: &core.Build{Number: 1337}, droneErr: nil,
 
@@ -113,7 +113,7 @@ func (s *TestSuite) TestHandler(c *check.C) {
 		d := mock.NewMockDrone(mockCtrl)
 		if test.call {
 			d.EXPECT().
-				RebuildLastBuild(test.repo, test.ref).
+				RebuildLastBuild(test.repo, test.branch).
 				Return(test.build, test.droneErr)
 		}
 

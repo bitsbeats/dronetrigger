@@ -20,8 +20,9 @@ type (
 
 	// Payload is the payload send to drone
 	Payload struct {
-		Repo string `json:"repo"`
-		Ref  string `json:"ref"`
+		Repo        string `json:"repo"`
+		Branch      string `json:"branch"`
+		ReleaseOnly bool   `json:"release_only"`
 	}
 )
 
@@ -66,10 +67,10 @@ func (web *Web) Handle(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// handle request
-	build, err := web.Drone.RebuildLastBuild(p.Repo, p.Ref)
+	build, err := web.Drone.RebuildLastBuild(p.Repo, p.Branch)
 	if err != nil {
 		w.(*ResponseWriterWithStatus).SetMessage(
-			fmt.Sprintf("unable to start last build for %s@%s: %s", p.Repo, p.Ref, err),
+			fmt.Sprintf("unable to start last build for %s@%s: %s", p.Repo, p.Branch, err),
 		)
 		w.WriteHeader(http.StatusInternalServerError)
 		Response(w, "error", fmt.Errorf("unable to restart build"))
@@ -77,7 +78,7 @@ func (web *Web) Handle(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.(*ResponseWriterWithStatus).SetMessage(
-		fmt.Sprintf("started build %d %s@%s", build.Number, p.Repo, p.Ref),
+		fmt.Sprintf("started build %d %s@%s", build.Number, p.Repo, p.Branch),
 	)
 	w.WriteHeader(200)
 	Response(w, "ok", nil)

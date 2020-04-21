@@ -41,10 +41,10 @@ func (d *Drone) Builds(repo string) (builds []*core.Build, err error) {
 }
 
 // Builds gets the last build for a specific branc
-func (d *Drone) LastBuild(repo string, ref string) (b *core.Build, err error) {
+func (d *Drone) LastBuild(repo string, branch string) (b *core.Build, err error) {
 	url := fmt.Sprintf("%s/api/repos/%s/builds/latest", d.url, repo)
-	if ref != "" {
-		url = fmt.Sprintf("%s?ref=%s", url, ref)
+	if branch != "" {
+		url = fmt.Sprintf("%s?branch=%s", url, branch)
 	}
 	b = &core.Build{}
 	err = d.request("GET", url, nil, b)
@@ -63,8 +63,8 @@ func (d *Drone) Trigger(repo string, buildId int64) (b *core.Build, err error) {
 }
 
 // RebuildLastBuild restarts the last build of a ref
-func (d *Drone) RebuildLastBuild(repo string, ref string) (build *core.Build, err error) {
-	lastBuild, err := d.LastBuild(repo, ref)
+func (d *Drone) RebuildLastBuild(repo string, branch string) (build *core.Build, err error) {
+	lastBuild, err := d.LastBuild(repo, branch)
 	if err != nil {
 		return nil, err
 	}

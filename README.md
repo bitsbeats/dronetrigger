@@ -30,7 +30,7 @@ Examples:
 dronetrigger -repo octocat/test
 
 # build specific branch of a repo
-dronetrigger -repo octocat/test -ref refs/heads/master
+dronetrigger -repo octocat/test -branch master
 ```
 
 Help:
@@ -40,7 +40,7 @@ $ dronetrigger -h
 Usage of ./dronetrigger:
   -config string
     	Configuration file. (default "/etc/dronetrigger.yml")
-  -ref string
+  -branch string
     	Git rev (i.e. branch) to trigger build.
   -repo string
     	Repository to build (i.e. octocat/awesome).
