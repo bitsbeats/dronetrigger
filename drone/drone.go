@@ -37,6 +37,9 @@ func (d *Drone) Builds(repo string) (builds []*core.Build, err error) {
 	url := fmt.Sprintf("%s/api/repos/%s/builds", d.url, repo)
 	builds = []*core.Build{}
 	err = d.request("GET", url, nil, &builds)
+	if err != nil {
+		return nil, err
+	}
 	return
 }
 
@@ -48,6 +51,9 @@ func (d *Drone) LastBuild(repo string, branch string) (b *core.Build, err error)
 	}
 	b = &core.Build{}
 	err = d.request("GET", url, nil, b)
+	if err != nil {
+		return nil, err
+	}
 	return
 }
 
