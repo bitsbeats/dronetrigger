@@ -3,7 +3,6 @@ package web
 import (
 	"encoding/json"
 	"fmt"
-	"io"
 	"log"
 	"net/http"
 	"time"
@@ -40,48 +39,54 @@ func (web *Web) Handle(w http.ResponseWriter, r *http.Request) {
 	p := Payload{}
 	err := json.NewDecoder(r.Body).Decode(&p)
 	if err != nil {
-		w.(*ResponseWriterWithStatus).SetMessage(
-			fmt.Sprintf("unable to load request body as json: %s", err),
-		)
-		w.WriteHeader(http.StatusInternalServerError)
-		Response(w, "error", fmt.Errorf("unable to parse request body"))
+		WriteResponse(w, Response{
+			StatusCode:  http.StatusInternalServerError,
+			LogMsg:      fmt.Sprintf("unable to load request body as json: %s", err),
+			ResponseMsg: "unable to parse request body",
+		})
 		return
 	}
 	if p.Repo == "" {
-		w.(*ResponseWriterWithStatus).SetMessage("no repo specified")
-		w.WriteHeader(http.StatusInternalServerError)
-		Response(w, "error", fmt.Errorf("no repo specified"))
+		WriteResponse(w, Response{
+			StatusCode:  http.StatusInternalServerError,
+			LogMsg:      "no repo specified",
+			ResponseMsg: "no repo specified",
+		})
 		return
 	}
 	if _, ok := web.Config.BearerToken[p.Repo]; !ok {
-		w.(*ResponseWriterWithStatus).SetMessage("invalid repository")
-		w.WriteHeader(http.StatusForbidden)
-		Response(w, "error", fmt.Errorf("invalid repository"))
+		WriteResponse(w, Response{
+			StatusCode:  http.StatusForbidden,
+			LogMsg:      "invalid repository",
+			ResponseMsg: "invalid repository",
+		})
 		return
 	}
 	if r.Header.Get("Authorization") != fmt.Sprintf("Bearer %s", web.Config.BearerToken[p.Repo]) {
-		w.(*ResponseWriterWithStatus).SetMessage("invalid bearer token")
-		w.WriteHeader(http.StatusForbidden)
-		Response(w, "error", fmt.Errorf("invalid bearer token"))
+		WriteResponse(w, Response{
+			StatusCode:  http.StatusForbidden,
+			LogMsg:      "invalid bearer token",
+			ResponseMsg: "invalid bearer token",
+		})
 		return
 	}
 
 	// handle request
 	build, err := web.Drone.RebuildLastBuild(p.Repo, p.Branch)
 	if err != nil {
-		w.(*ResponseWriterWithStatus).SetMessage(
-			fmt.Sprintf("unable to start last build for %s@%s: %s", p.Repo, p.Branch, err),
-		)
-		w.WriteHeader(http.StatusInternalServerError)
-		Response(w, "error", fmt.Errorf("unable to restart build"))
+		WriteResponse(w, Response{
+			StatusCode:  http.StatusInternalServerError,
+			LogMsg:      fmt.Sprintf("unable to start last build for %s@%s: %s", p.Repo, p.Branch, err),
+			ResponseMsg: "unable to restart build",
+		})
 		return
 	}
 
-	w.(*ResponseWriterWithStatus).SetMessage(
-		fmt.Sprintf("started build %d %s@%s", build.Number, p.Repo, p.Branch),
-	)
-	w.WriteHeader(200)
-	Response(w, "ok", nil)
+	WriteResponse(w, Response{
+		StatusCode:  http.StatusCreated,
+		LogMsg:      fmt.Sprintf("started build %d %s@%s", build.Number, p.Repo, p.Branch),
+		ResponseMsg: "ok",
+	})
 }
 
 // Middleware provides logging
@@ -128,15 +133,29 @@ func (r *ResponseWriterWithStatus) SetMessage(message string) {
 	r.LogMessage = message
 }
 
-// Response write a JsonResponse to
-func Response(w io.Writer, status string, err error) {
-	errText := ""
-	if err != nil {
-		errText = err.Error()
+// Response is a helper to create uniform responses
+type Response struct {
+	StatusCode  int
+	ResponseMsg string
+	LogMsg      string
+}
+
+// WriteResponse writes a response to http.ResponseWriter
+func WriteResponse(w http.ResponseWriter, r Response) {
+	w.(*ResponseWriterWithStatus).SetMessage(r.LogMsg)
+	w.WriteHeader(r.StatusCode)
+	responseMsg := r.ResponseMsg
+	errorMsg := ""
+	if responseMsg == "" {
+		responseMsg = "ok"
+	}
+	if r.StatusCode >= 400 {
+		responseMsg = "error"
+		errorMsg = r.ResponseMsg
 	}
 	jr := core.JsonResponse{
-		Status: status,
-		Err:    errText,
+		Status: responseMsg,
+		Err:    errorMsg,
 	}
 	_ = json.NewEncoder(w).Encode(jr)
 }
