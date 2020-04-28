@@ -33,8 +33,8 @@ func New(url string, token string) *Drone {
 }
 
 // Builds lists all builds
-func (d *Drone) Builds(repo string) (builds []*core.Build, err error) {
-	url := fmt.Sprintf("%s/api/repos/%s/builds", d.url, repo)
+func (d *Drone) Builds(repo string, page int) (builds []*core.Build, err error) {
+	url := fmt.Sprintf("%s/api/repos/%s/builds?page=%d", d.url, repo, page)
 	builds = []*core.Build{}
 	err = d.request("GET", url, nil, &builds)
 	if err != nil {
