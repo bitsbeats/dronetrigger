@@ -3,16 +3,18 @@ package core
 type (
 	// Build is a Drone build
 	Build struct {
-		Message string
-		Number  int64
-		Before  string
-		After   string
-		Source  string
+		Message string `json:"message"`
+		Number  int64  `json:"number"`
+		Before  string `json:"before"`
+		After   string `json:"after"`
+		Source  string `json:"source"`
+		Event   string `json:"event"`
 	}
 
 	// Drone is a api client for Drone
 	Drone interface {
 		RebuildLastBuild(repo, ref string) (*Build, error)
+		RebuildLastTag(repo string) (*Build, error)
 	}
 )
 

@@ -47,7 +47,7 @@ func (s *TestSuite) TestConfig(c *check.C) {
 	c.Assert(cfg, check.DeepEquals, &core.Config{
 		Url:   "https://drone.example.com",
 		Token: "hi there",
-		Web: nil,
+		Web:   nil,
 	})
 
 	cfg, err = LoadConfig("test_files/non-existent.yaml")

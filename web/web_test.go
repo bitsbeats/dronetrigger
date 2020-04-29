@@ -109,6 +109,7 @@ func (s *TestSuite) TestHandler(c *check.C) {
 		},
 	}
 
+	// test normal builds
 	for _, test := range tests {
 		d := mock.NewMockDrone(mockCtrl)
 		if test.call {
@@ -133,6 +134,24 @@ func (s *TestSuite) TestHandler(c *check.C) {
 		c.Assert(*resp, check.Equals, *test.resp)
 
 	}
+
+	// test tag
+	d := mock.NewMockDrone(mockCtrl)
+	d.EXPECT().RebuildLastTag("octocat/repo3").Return(&core.Build{Number: 1337}, nil)
+	web := NewWeb(&core.WebConfig{
+		BearerToken: map[string]string{"octocat/repo3": "0ct0cat!"},
+		Listen:      "1337",
+	}, d)
+
+	body := bytes.NewBufferString(`{"repo": "octocat/repo3", "release_only": true}`)
+	r := httptest.NewRequest("POST", "/", body)
+	r.Header.Set("Authorization", "Bearer 0ct0cat!")
+	w := NewResponseWriterWithStatus(httptest.NewRecorder())
+	web.Handle(w, r)
+
+	resp := &core.JsonResponse{}
+	_ = json.NewDecoder(w.ResponseWriter.(*httptest.ResponseRecorder).Body).Decode(resp)
+	c.Assert(*resp, check.DeepEquals, core.JsonResponse{Status: "ok", Err: ""})
 
 }
 

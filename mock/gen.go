@@ -47,3 +47,18 @@ func (mr *MockDroneMockRecorder) RebuildLastBuild(arg0, arg1 interface{}) *gomoc
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RebuildLastBuild", reflect.TypeOf((*MockDrone)(nil).RebuildLastBuild), arg0, arg1)
 }
+
+// RebuildLastTag mocks base method
+func (m *MockDrone) RebuildLastTag(arg0 string) (*core.Build, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RebuildLastTag", arg0)
+	ret0, _ := ret[0].(*core.Build)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// RebuildLastTag indicates an expected call of RebuildLastTag
+func (mr *MockDroneMockRecorder) RebuildLastTag(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RebuildLastTag", reflect.TypeOf((*MockDrone)(nil).RebuildLastTag), arg0)
+}
