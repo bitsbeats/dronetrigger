@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/bitsbeats/dronetrigger/config"
+	"github.com/bitsbeats/dronetrigger/core"
 	"github.com/bitsbeats/dronetrigger/drone"
 )
 
@@ -13,6 +14,7 @@ func main() {
 	log.SetFlags(0)
 	log.SetOutput(os.Stdout)
 	branch := flag.String("branch", "", "Git branch to trigger build.")
+	release := flag.Bool("release", false, "Rebuild last release tag. Mutally exclusive with -branch")
 	repo := flag.String("repo", "", "Repository to build (i.e. octocat/awesome).")
 	configFile := flag.String("config", "/etc/dronetrigger.yml", "Configuration file.")
 	verbose := flag.Bool("v", false, "Verbose output.")
@@ -23,6 +25,10 @@ func main() {
 		flag.PrintDefaults()
 		log.Fatal("\nplease specify a repository.")
 	}
+	if *release && *branch != "" {
+		flag.PrintDefaults()
+		log.Fatal("unable to use -release with -branch")
+	}
 
 	c, err := config.LoadConfig(*configFile)
 	if err != nil {
@@ -30,7 +36,13 @@ func main() {
 	}
 
 	d := drone.New(c.Url, c.Token)
-	build, err := d.RebuildLastBuild(*repo, *branch)
+
+	build := (*core.Build)(nil)
+	if *release {
+		build, err = d.RebuildLastTag(*repo)
+	} else {
+		build, err = d.RebuildLastBuild(*repo, *branch)
+	}
 	if err != nil {
 		log.Fatal(err)
 	}
