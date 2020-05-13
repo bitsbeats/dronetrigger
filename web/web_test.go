@@ -143,7 +143,7 @@ func (s *TestSuite) TestHandler(c *check.C) {
 		Listen:      "1337",
 	}, d)
 
-	body := bytes.NewBufferString(`{"repo": "octocat/repo3", "release_only": true}`)
+	body := bytes.NewBufferString(`{"repo": "octocat/repo3", "release": true}`)
 	r := httptest.NewRequest("POST", "/", body)
 	r.Header.Set("Authorization", "Bearer 0ct0cat!")
 	w := NewResponseWriterWithStatus(httptest.NewRecorder())

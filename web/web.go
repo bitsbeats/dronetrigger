@@ -21,7 +21,7 @@ type (
 	Payload struct {
 		Repo    string `json:"repo"`
 		Branch  string `json:"branch"`
-		Release bool   `json:"release_only"`
+		Release bool   `json:"release"`
 	}
 )
 
