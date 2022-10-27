@@ -1,9 +1,14 @@
 module github.com/bitsbeats/dronetrigger
 
-go 1.12
+go 1.17
 
 require (
-	github.com/golang/mock v1.4.3
-	gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405
-	gopkg.in/yaml.v2 v2.2.2
+	github.com/golang/mock v1.6.0
+	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c
+	gopkg.in/yaml.v2 v2.4.0
+)
+
+require (
+	github.com/kr/pretty v0.2.1 // indirect
+	github.com/kr/text v0.1.0 // indirect
 )
