@@ -22,6 +22,7 @@ type (
 		Repo    string `json:"repo"`
 		Branch  string `json:"branch"`
 		Release bool   `json:"release"`
+		Target  string `json:"target"`
 	}
 )
 
@@ -73,11 +74,24 @@ func (web *Web) Handle(w http.ResponseWriter, r *http.Request) {
 
 	// handle request
 	build := (*core.Build)(nil)
-	if p.Release {
+	if p.Release && p.Target == "" {
 		build, err = web.Drone.RebuildLastTag(p.Repo)
-	} else {
+	} else if !p.Release && p.Target == "" {
 		build, err = web.Drone.RebuildLastBuild(p.Repo, p.Branch)
+	} else if p.Release && p.Target != "" {
+		build, err = web.Drone.PromoteLastTag(p.Repo, p.Target)
+	} else if !p.Release && p.Target != "" {
+		build, err = web.Drone.PromoteLastBuild(p.Repo, p.Branch, p.Target)
+	} else {
+		WriteResponse(w, Response{
+			StatusCode: http.StatusBadRequest,
+			LogMsg: "invalid request",
+			ResponseMsg: "invalid request",
+		})
+		return
 	}
+
+	// handle result
 	if err != nil || build == nil {
 		WriteResponse(w, Response{
 			StatusCode:  http.StatusInternalServerError,
@@ -86,7 +100,6 @@ func (web *Web) Handle(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
-
 	WriteResponse(w, Response{
 		StatusCode:  http.StatusCreated,
 		LogMsg:      fmt.Sprintf("started build %d %s@%s", build.Number, p.Repo, p.Branch),

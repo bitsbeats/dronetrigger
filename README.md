@@ -58,6 +58,12 @@ curl -H 'Authorization: Bearer s3cret_token' -d '{"repo": "octocat/test", "branc
 
 # rebuild last tag
 curl -H 'Authorization: Bearer s3cret_token' -d '{"repo": "octocat/test", "release": true}' $url
+
+# promote last commit on a branch
+curl -H 'Authorization: Bearer s3cret_token' -d '{"repo": "octocat/test", "branch": "master", "target": "promote-name"}' $url
+
+# promote last tag
+curl -H 'Authorization: Bearer s3cret_token' -d '{"repo": "octocat/test", "release": true, "target": "promote-name"}' $url
 ```
 
 Help:

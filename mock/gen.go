@@ -5,35 +5,66 @@
 package mock
 
 import (
+	reflect "reflect"
+
 	core "github.com/bitsbeats/dronetrigger/core"
 	gomock "github.com/golang/mock/gomock"
-	reflect "reflect"
 )
 
-// MockDrone is a mock of Drone interface
+// MockDrone is a mock of Drone interface.
 type MockDrone struct {
 	ctrl     *gomock.Controller
 	recorder *MockDroneMockRecorder
 }
 
-// MockDroneMockRecorder is the mock recorder for MockDrone
+// MockDroneMockRecorder is the mock recorder for MockDrone.
 type MockDroneMockRecorder struct {
 	mock *MockDrone
 }
 
-// NewMockDrone creates a new mock instance
+// NewMockDrone creates a new mock instance.
 func NewMockDrone(ctrl *gomock.Controller) *MockDrone {
 	mock := &MockDrone{ctrl: ctrl}
 	mock.recorder = &MockDroneMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockDrone) EXPECT() *MockDroneMockRecorder {
 	return m.recorder
 }
 
-// RebuildLastBuild mocks base method
+// PromoteLastBuild mocks base method.
+func (m *MockDrone) PromoteLastBuild(arg0, arg1, arg2 string) (*core.Build, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "PromoteLastBuild", arg0, arg1, arg2)
+	ret0, _ := ret[0].(*core.Build)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// PromoteLastBuild indicates an expected call of PromoteLastBuild.
+func (mr *MockDroneMockRecorder) PromoteLastBuild(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PromoteLastBuild", reflect.TypeOf((*MockDrone)(nil).PromoteLastBuild), arg0, arg1, arg2)
+}
+
+// PromoteLastTag mocks base method.
+func (m *MockDrone) PromoteLastTag(arg0, arg1 string) (*core.Build, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "PromoteLastTag", arg0, arg1)
+	ret0, _ := ret[0].(*core.Build)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// PromoteLastTag indicates an expected call of PromoteLastTag.
+func (mr *MockDroneMockRecorder) PromoteLastTag(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PromoteLastTag", reflect.TypeOf((*MockDrone)(nil).PromoteLastTag), arg0, arg1)
+}
+
+// RebuildLastBuild mocks base method.
 func (m *MockDrone) RebuildLastBuild(arg0, arg1 string) (*core.Build, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "RebuildLastBuild", arg0, arg1)
@@ -42,13 +73,13 @@ func (m *MockDrone) RebuildLastBuild(arg0, arg1 string) (*core.Build, error) {
 	return ret0, ret1
 }
 
-// RebuildLastBuild indicates an expected call of RebuildLastBuild
+// RebuildLastBuild indicates an expected call of RebuildLastBuild.
 func (mr *MockDroneMockRecorder) RebuildLastBuild(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RebuildLastBuild", reflect.TypeOf((*MockDrone)(nil).RebuildLastBuild), arg0, arg1)
 }
 
-// RebuildLastTag mocks base method
+// RebuildLastTag mocks base method.
 func (m *MockDrone) RebuildLastTag(arg0 string) (*core.Build, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "RebuildLastTag", arg0)
@@ -57,7 +88,7 @@ func (m *MockDrone) RebuildLastTag(arg0 string) (*core.Build, error) {
 	return ret0, ret1
 }
 
-// RebuildLastTag indicates an expected call of RebuildLastTag
+// RebuildLastTag indicates an expected call of RebuildLastTag.
 func (mr *MockDroneMockRecorder) RebuildLastTag(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RebuildLastTag", reflect.TypeOf((*MockDrone)(nil).RebuildLastTag), arg0)

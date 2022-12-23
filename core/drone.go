@@ -15,6 +15,8 @@ type (
 	Drone interface {
 		RebuildLastBuild(repo, ref string) (*Build, error)
 		RebuildLastTag(repo string) (*Build, error)
+		PromoteLastBuild(repo, ref, target string) (*Build, error)
+		PromoteLastTag(repo, target string) (*Build, error)
 	}
 )
 

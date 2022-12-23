@@ -126,6 +126,43 @@ func (d *Drone) RebuildLastTag(repo string) (build *core.Build, err error) {
 	return
 }
 
+// Promote promotes an existing build to specified target
+func (d *Drone) Promote(repo, target string, buildId int64) (b *core.Build, err error) {
+	url := fmt.Sprintf("%s/api/repos/%s/builds/%d/promote?target=%s", d.url, repo, buildId, target)
+	b = &core.Build{}
+	err = d.request("POST", url, nil, b)
+	if err != nil {
+		return nil, err
+	}
+	return
+}
+
+// PromoteLastBuild runs promote on the last build of a ref
+func (d *Drone) PromoteLastBuild(repo, ref, target string) (build *core.Build, err error) {
+	lastBuild, err := d.LastBuild(repo, ref, BUILD_PUSH)
+	if err != nil {
+		return nil, err
+	}
+	build, err = d.Promote(repo, target, lastBuild.Number)
+	if err != nil {
+		return nil, err
+	}
+	return
+}
+
+// PromoteLastTag urns promote on the last tag build
+func (d *Drone) PromoteLastTag(repo, target string) (build *core.Build, err error) {
+	lastBuild, err := d.LastBuild(repo, "", BUILD_TAG)
+	if err != nil {
+		return nil, err
+	}
+	build, err = d.Promote(repo, target, lastBuild.Number)
+	if err != nil {
+		return nil, err
+	}
+	return
+}
+
 func (d *Drone) request(method string, url string, body io.Reader, result interface{}) (err error) {
 	req, err := http.NewRequest(method, url, body)
 	if err != nil {
