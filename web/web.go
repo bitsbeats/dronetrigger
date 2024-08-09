@@ -101,7 +101,7 @@ func (web *Web) Handle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	srcIp := r.Header.Get("X-Real-IP")
+	srcIp := r.Header.Get("X-Forwarded-For")
 	if srcIp == "" {
 		srcIp = r.RemoteAddr
 	}
