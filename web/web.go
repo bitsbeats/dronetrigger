@@ -84,8 +84,8 @@ func (web *Web) Handle(w http.ResponseWriter, r *http.Request) {
 		build, err = web.Drone.PromoteLastBuild(p.Repo, p.Branch, p.Target)
 	} else {
 		WriteResponse(w, Response{
-			StatusCode: http.StatusBadRequest,
-			LogMsg: "invalid request",
+			StatusCode:  http.StatusBadRequest,
+			LogMsg:      "invalid request",
 			ResponseMsg: "invalid request",
 		})
 		return
@@ -100,9 +100,23 @@ func (web *Web) Handle(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
+
+	srcIp := r.Header.Get("X-Real-IP")
+	if srcIp == "" {
+		srcIp = r.RemoteAddr
+	}
+
 	WriteResponse(w, Response{
-		StatusCode:  http.StatusCreated,
-		LogMsg:      fmt.Sprintf("started build %d %s@%s", build.Number, p.Repo, p.Branch),
+		StatusCode: http.StatusCreated,
+		LogMsg: fmt.Sprintf(
+			"%s started build %d %s@%s for target %s, commit %s",
+			srcIp,
+			build.Number,
+			p.Repo,
+			p.Branch,
+			p.Target,
+			build.After,
+		),
 		ResponseMsg: "ok",
 	})
 }
