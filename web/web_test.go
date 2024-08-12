@@ -10,7 +10,7 @@ import (
 
 	"github.com/bitsbeats/dronetrigger/core"
 	"github.com/bitsbeats/dronetrigger/mock"
-	"github.com/golang/mock/gomock"
+	"go.uber.org/mock/gomock"
 	check "gopkg.in/check.v1"
 )
 

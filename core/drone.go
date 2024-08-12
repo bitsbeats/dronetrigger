@@ -13,10 +13,11 @@ type (
 
 	// Drone is a api client for Drone
 	Drone interface {
-		RebuildLastBuild(repo, ref string) (*Build, error)
-		RebuildLastTag(repo string) (*Build, error)
 		PromoteLastBuild(repo, ref, target string) (*Build, error)
 		PromoteLastTag(repo, target string) (*Build, error)
+		Promote(repo, target string, buildID int64) (*Build, error)
+		RebuildLastBuild(repo, ref string) (*Build, error)
+		RebuildLastTag(repo string) (*Build, error)
 	}
 )
 

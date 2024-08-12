@@ -23,6 +23,7 @@ type (
 		Branch  string `json:"branch"`
 		Release bool   `json:"release"`
 		Target  string `json:"target"`
+		BuildID int64  `json:"build_id"`
 	}
 )
 
@@ -78,6 +79,8 @@ func (web *Web) Handle(w http.ResponseWriter, r *http.Request) {
 		build, err = web.Drone.RebuildLastTag(p.Repo)
 	} else if !p.Release && p.Target == "" {
 		build, err = web.Drone.RebuildLastBuild(p.Repo, p.Branch)
+	} else if p.BuildID != 0 && p.Target != "" {
+		build, err = web.Drone.Promote(p.Repo, p.Target, p.BuildID)
 	} else if p.Release && p.Target != "" {
 		build, err = web.Drone.PromoteLastTag(p.Repo, p.Target)
 	} else if !p.Release && p.Target != "" {
