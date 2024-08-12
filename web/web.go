@@ -128,7 +128,8 @@ func (web *Web) Middleware(next http.Handler) http.Handler {
 		w = NewResponseWriterWithStatus(w)
 		next.ServeHTTP(w, r)
 		log.Printf(
-			"%d %s %s %s %s - %s",
+			"%s %d %s %s %s %s - %s",
+			time.Now().Format("2006-01-02 15:04:05"),
 			w.(*ResponseWriterWithStatus).StatusCode,
 			r.Method,
 			r.RequestURI,
